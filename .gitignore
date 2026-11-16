@@ -1,0 +1,26 @@
+
+# Environment variables
+.env
+
+# Personal resume
+resume.pdf
+
+# Test files
+corrupted.pdf
+scanned.pdf
+resume.txt
+
+# Generated reports
+output/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.venv/
+
+# IDE files
+.vscode/
+.idea/
