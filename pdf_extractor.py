@@ -4,20 +4,35 @@ from pypdf import PdfReader
 from pypdf.errors import PdfReadError
 
 
-def extract_resume_text(pdf_path):
+def extract_resume_text(pdf_source):
 
-    # 1. Check whether file exists
-    if not os.path.isfile(pdf_path):
-        raise FileNotFoundError("PDF file not found!")
+    # Check whether source is a file path or uploaded file
+    if isinstance(pdf_source, (str, os.PathLike)):
 
-    # 2. Check file extension
-    if not pdf_path.lower().endswith(".pdf"):
-        raise ValueError("Please provide a PDF file!")
+        pdf_path = os.fspath(pdf_source)
 
-    # 3. Open and read PDF
+        if not os.path.isfile(pdf_path):
+            raise FileNotFoundError("PDF file not found!")
+
+        if not pdf_path.lower().endswith(".pdf"):
+            raise ValueError("Please provide a PDF file!")
+
+    else:
+        # Handle uploaded PDF files
+        filename = getattr(pdf_source, "name", "")
+
+        if not filename.lower().endswith(".pdf"):
+            raise ValueError("Please provide a PDF file!")
+
+        if not hasattr(pdf_source, "read"):
+            raise ValueError("Invalid uploaded file!")
+
+        pdf_source.seek(0)
+
+    # Extract PDF text
     try:
 
-        reader = PdfReader(pdf_path)
+        reader = PdfReader(pdf_source)
 
         resume_text = ""
 
@@ -34,7 +49,7 @@ def extract_resume_text(pdf_path):
     except OSError:
         raise OSError("Unable to access or read the PDF file!")
 
-    # 4. Check extracted text
+    # Check extracted text
     if not resume_text.strip():
         raise ValueError(
             "No readable text found! This PDF may be scanned."
@@ -46,15 +61,11 @@ def extract_resume_text(pdf_path):
 # Test PDF extraction
 if __name__ == "__main__":
 
-    pdf_path = "missing.pdf"
-
     try:
-
-        text = extract_resume_text(pdf_path)
+        text = extract_resume_text("resume.pdf")
 
         print("Resume Text:")
         print(text)
 
     except (FileNotFoundError, ValueError, OSError) as e:
-
         print("Error:", e)
