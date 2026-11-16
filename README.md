@@ -1,36 +1,40 @@
 # AI Resume Analyzer
 
-An AI-powered Resume Analyzer built using Python and Google's Gemini API. It extracts text from PDF resumes, analyzes candidate information using Generative AI, and generates a structured resume feedback report.
+An AI-powered Resume Analyzer built using Python, Streamlit, and Google Gemini API. Upload your resume in PDF format and receive AI-generated feedback about your technical skills, education, experience, strengths, weaknesses, and improvement suggestions.
 
 ## Features
 
-- **PDF Text Extraction:** Extracts text from PDF resumes using PyPDF.
-- **PDF Validation:** Handles missing, invalid, corrupted, and scanned PDFs.
-- **AI Resume Analysis:** Uses Google's Gemini API to analyze resume content.
-- **Resume Feedback:** Identifies technical skills, soft skills, education, experience, strengths, weaknesses, and improvement suggestions.
-- **Report Generation:** Saves analysis results as timestamped text files.
-- **Error Handling:** Handles common file and PDF errors.
+- **PDF Resume Upload:** Upload resumes directly through a web interface.
+- **PDF Text Extraction:** Extract readable text from PDF documents using pypdf.
+- **AI Resume Analysis:** Analyze resumes using Google Gemini API.
+- **Technical Skills Analysis:** Identify programming languages, frameworks, and tools.
+- **Resume Feedback:** Identify strengths, weaknesses, and improvement opportunities.
+- **Report Download:** Download the generated analysis as a text file.
+- **Command-Line Support:** Run the analyzer through the terminal as well.
 
-## Technologies Used
+## Tech Stack
 
 - Python
+- Streamlit
 - Google Gemini API
 - Google GenAI SDK
-- PyPDF
-- Python-dotenv
+- pypdf
+- python-dotenv
 
 ## Project Structure
 
 ```text
 AI-Resume-Analyzer/
 │
+├── app.py
 ├── main.py
 ├── pdf_extractor.py
 ├── resume_analyzer.py
 ├── report_generator.py
 ├── tools.py
+│
 ├── requirements.txt
-├── .env
+├── README.md
 ├── .gitignore
 │
 └── output/
@@ -42,16 +46,21 @@ AI-Resume-Analyzer/
 
 ```bash
 git clone https://github.com/keshavbind/AI-Resume-Analyzer.git
+```
+
+### 2. Navigate to the project directory
+
+```bash
 cd AI-Resume-Analyzer
 ```
 
-### 2. Install dependencies
+### 3. Install dependencies
 
 ```bash
-py -3.14 -m pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
-### 3. Configure Gemini API
+### 4. Configure Gemini API Key
 
 Create a `.env` file in the project directory:
 
@@ -59,42 +68,51 @@ Create a `.env` file in the project directory:
 GEMINI_API_KEY=your_gemini_api_key
 ```
 
-Replace the placeholder with your own Gemini API key.
+Get your API key from Google AI Studio.
 
-### 4. Run the application
+### 5. Run the Streamlit Web Application
 
 ```bash
-py -3.14 main.py
+streamlit run app.py
 ```
 
-Enter the path of your PDF resume when prompted.
+Open the local URL displayed in your terminal.
+
+## Run the Command-Line Application
+
+You can also use the original command-line version:
+
+```bash
+python main.py
+```
+
+Enter the path to your resume PDF when prompted.
 
 ## How It Works
 
-1. The user provides a PDF resume.
-2. Python extracts readable text from the PDF.
-3. The extracted text is sent to Google's Gemini API.
-4. Gemini analyzes the resume and generates structured feedback.
-5. The application displays the analysis.
-6. The report is saved inside the `output` folder.
+1. Upload a PDF resume or provide its path through the command line.
+2. Extract resume text using pypdf.
+3. Send the extracted text to Google Gemini.
+4. Generate structured AI feedback.
+5. Display the analysis or save and download the report.
 
 ## Future Improvements
 
-- OCR support for scanned PDF resumes.
-- Resume scoring system.
-- Job description matching.
-- Keyword and ATS analysis.
-- PDF report generation.
-- Web-based user interface.
+- ATS compatibility scoring
+- Job description matching
+- Keyword analysis
+- Professional PDF report generation
+- Improved dashboard and visualizations
+- OCR support for scanned resumes
 
 ## Security
 
-- Never upload your `.env` file or API key.
-- Do not upload personal resumes without permission.
-- Generated reports are excluded from version control.
+- Keep your Gemini API key inside `.env`.
+- Never upload `.env` or personal resume files to GitHub.
+- Do not share resumes without the owner's permission.
 
 ## Author
 
 **Keshav Bind**
 
-B.Sc. Information Technology Graduate | Android Developer | AI Developer (Learning)
+GitHub: https://github.com/keshavbind
