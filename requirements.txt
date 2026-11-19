@@ -2,3 +2,7 @@ google-genai
 python-dotenv
 pypdf
 streamlit
+fastapi
+uvicorn
+python-multipart
+requests

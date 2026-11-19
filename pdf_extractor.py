@@ -19,10 +19,15 @@ def extract_resume_text(pdf_source):
 
     else:
         # Handle uploaded PDF files
-        filename = getattr(pdf_source, "name", "")
+        filename = getattr(pdf_source, "name", None)
 
-        if not filename.lower().endswith(".pdf"):
+        if filename is not None and not filename.lower().endswith(".pdf"):
             raise ValueError("Please provide a PDF file!")
+
+        if not hasattr(pdf_source, "read"):
+            raise ValueError("Invalid uploaded file!")
+
+        pdf_source.seek(0)
 
         if not hasattr(pdf_source, "read"):
             raise ValueError("Invalid uploaded file!")

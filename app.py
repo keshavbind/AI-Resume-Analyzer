@@ -1,15 +1,15 @@
 
 import streamlit as st
-from tools import analyze_resume_pdf
+import requests
 
-# Page configuration
+API_URL = "http://127.0.0.1:8000/analyze"
+
 st.set_page_config(
     page_title="AI Resume Analyzer",
     page_icon="📄",
     layout="centered"
 )
 
-# Application heading
 st.title("📄 AI Resume Analyzer")
 
 st.write(
@@ -19,7 +19,6 @@ st.write(
 
 st.divider()
 
-# PDF upload section
 st.subheader("Upload Your Resume")
 
 uploaded_file = st.file_uploader(
@@ -27,7 +26,6 @@ uploaded_file = st.file_uploader(
     type=["pdf"]
 )
 
-# Analyze button
 if uploaded_file is not None:
 
     st.success(f"Uploaded: {uploaded_file.name}")
@@ -35,29 +33,55 @@ if uploaded_file is not None:
     if st.button("Analyze Resume", type="primary"):
 
         try:
+            with st.spinner("Analyzing your resume with AI..."):
 
-            with st.spinner(
-                "Analyzing your resume with AI..."
-            ):
+                files = {
+                    "file": (
+                        uploaded_file.name,
+                        uploaded_file.getvalue(),
+                        "application/pdf"
+                    )
+                }
 
-                result = analyze_resume_pdf(uploaded_file)
+                response = requests.post(
+                    API_URL,
+                    files=files,
+                    timeout=300
+                )
 
-            st.success("Analysis completed successfully!")
+            if response.status_code == 200:
 
-            st.divider()
+                data = response.json()
+                result = data["analysis"]
 
-            st.subheader("Your Resume Analysis")
+                st.success("Analysis completed successfully!")
 
-            st.markdown(result)
+                st.divider()
+                st.subheader("Your Resume Analysis")
+                st.markdown(result)
 
-            # Download analysis report
-            st.download_button(
-                label="Download Analysis Report",
-                data=result,
-                file_name="resume_analysis.txt",
-                mime="text/plain"
-            )
+                st.download_button(
+                    label="Download Analysis Report",
+                    data=result,
+                    file_name="resume_analysis.txt",
+                    mime="text/plain"
+                )
 
-        except Exception as e:
+            else:
+                error_message = response.json().get(
+                    "detail",
+                    "Something went wrong."
+                )
+                st.error(f"API Error: {error_message}")
 
-            st.error(f"Error: {e}")
+        except requests.exceptions.ConnectionError:
+            st.error("Cannot connect to FastAPI. Start your backend server.")
+
+        except requests.exceptions.Timeout:
+            st.error("Request timed out. Please try again.")
+
+        except requests.exceptions.RequestException as e:
+            st.error(f"Request failed: {e}")
+
+        except (KeyError, ValueError) as e:
+            st.error(f"Invalid API response: {e}")
